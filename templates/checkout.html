@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Checkout - ShopEase{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 0;">
+    <h2>Order Checkout</h2>
+    <div style="display: flex; gap: 30px; flex-wrap: wrap; margin-top: 20px;">
+        <div style="flex: 1.5; min-width: 300px; background: white; padding: 25px; border-radius: 8px;">
+            <h3>Shipping Information</h3>
+            <form method="POST" style="margin-top: 15px;">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <small style="color: red;">{{ field.errors.0 }}</small>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 20px;">Place Order (Cash on Delivery)</button>
+            </form>
+        </div>
+
+        <div style="flex: 1; min-width: 280px; background: white; padding: 25px; border-radius: 8px; height: fit-content;">
+            <h3>Order Summary</h3>
+            <ul style="list-style: none; margin: 15px 0;">
+                {% for item in cart_items %}
+                    <li style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                        <span>₹{{ item.item_total }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <p style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <span>Subtotal:</span> <span>₹{{ subtotal }}</span>
+            </p>
+            <p style="display: flex; justify-content: space-between;">
+                <span>Delivery:</span> <span>₹{{ delivery_charge }}</span>
+            </p>
+            <hr style="margin: 10px 0;">
+            <h3 style="display: flex; justify-content: space-between;">
+                <span>Total:</span> <span>₹{{ grand_total }}</span>
+            </h3>
+        </div>
+    </div>
+</div>
+{% endblock %}

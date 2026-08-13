@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Products Catalog - ShopEase{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 30px 0;">
+    <h1 style="margin-bottom: 20px;">All Products</h1>
+
+    <form method="GET" action="{% url 'products' %}" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; background: white; padding: 15px; border-radius: 8px;">
+        <input type="text" name="search" class="form-control" placeholder="Search products..." value="{{ search_query }}" style="flex: 2; min-width: 200px;">
+        
+        <select name="category" class="form-control" style="flex: 1; min-width: 150px;">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"i" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="sort" class="form-control" style="flex: 1; min-width: 150px;">
+            <option value="">Sort By</option>
+            <option value="low_high" {% if selected_sort == 'low_high' %}selected{% endif %}>Price: Low to High</option>
+            <option value="high_low" {% if selected_sort == 'high_low' %}selected{% endif %}>Price: High to Low</option>
+            <option value="latest" {% if selected_sort == 'latest' %}selected{% endif %}>Latest Products</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+    </form>
+
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <span class="product-category">{{ product.category.name }}</span>
+                    <h3 class="product-title">{{ product.name }}</h3>
+                    <div class="product-price-box">
+                        <span class="price">₹{{ product.final_price }}</span>
+                        {% if product.discount > 0 %}
+                            <span class="old-price">₹{{ product.price }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-actions">
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-outline" style="border-color: var(--primary); color: var(--primary); flex: 1; text-align: center;">View</a>
+                        <form action="{% url 'add_to_cart' product.id %}" method="POST" style="flex: 1;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No products matched your search filters.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

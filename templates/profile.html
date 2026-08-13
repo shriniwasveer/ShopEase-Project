@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - ShopEase{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 0;">
+    <h2>User Dashboard</h2>
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Full Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Email Address:</strong> {{ user.email }}</p>
+    </div>
+
+    <h3>Your Past Orders</h3>
+    {% if orders %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Total Amount</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                        <td>₹{{ order.total_amount }}</td>
+                        <td><strong>{{ order.status }}</strong></td>
+                        <td><a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline" style="padding: 4px 10px; font-size: 0.8rem; border-color: var(--primary); color: var(--primary);">View Details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="margin-top: 10px;">You have placed no orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

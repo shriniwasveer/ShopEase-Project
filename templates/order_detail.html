@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Order {{ order.order_id }} - ShopEase{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 40px 0;">
+    <h2>Order Receipt: {{ order.order_id }}</h2>
+    <p>Status: <strong style="color: var(--primary);">{{ order.status }}</strong> | Date: {{ order.created_at }}</p>
+
+    <div style="display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap;">
+        <div style="flex: 2; min-width: 300px; background: white; padding: 20px; border-radius: 8px;">
+            <h3>Ordered Items</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.subtotal }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="flex: 1; min-width: 250px; background: white; padding: 20px; border-radius: 8px; height: fit-content;">
+            <h3>Shipping Details</h3>
+            <p style="margin-top: 10px;"><strong>Recipient:</strong> {{ order.full_name }}</p>
+            <p><strong>Phone:</strong> {{ order.phone }}</p>
+            <p><strong>Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.state }} - {{ order.pincode }}</p>
+            <hr style="margin: 15px 0;">
+            <h3>Grand Total: ₹{{ order.total_amount }}</h3>
+        </div>
+    </div>
+</div>
+{% endblock %}

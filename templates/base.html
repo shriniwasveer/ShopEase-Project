@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ShopEase - Modern Online Shopping{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="{% url 'home' %}" class="logo">Shop<span>Ease</span></a>
+            
+            <ul class="nav-menu">
+                <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+                <li><a href="{% url 'products' %}" class="nav-link">Products</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}" class="nav-link">Profile</a></li>
+                    <li><a href="{% url 'orders' %}" class="nav-link">My Orders</a></li>
+                    <li><a href="{% url 'logout' %}" class="nav-link">Logout ({{ user.username }})</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                    <li><a href="{% url 'register' %}" class="nav-link">Register</a></li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'cart' %}" class="cart-icon-btn">
+                        🛒 Cart <span class="cart-badge">{{ cart_count }}</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <main style="flex: 1;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>ShopEase</h3>
+                    <p style="margin-top: 10px; font-size: 0.9rem;">Your Smart Way to Shop Online. Fast, reliable and high-quality diploma capstone project execution.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <p><a href="{% url 'home' %}" style="color: #cbd5e1;">Home</a></p>
+                    <p><a href="{% url 'products' %}" style="color: #cbd5e1;">Products Catalog</a></p>
+                </div>
+                <div>
+                    <h4>Customer Support</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Email: support@shopease.com</p>
+                    <p style="color: #cbd5e1; font-size: 0.9rem;">Phone: +91 98765 43210</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2026 ShopEase E-Commerce Project. Developed for Industrial Training Submission.
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
